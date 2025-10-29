@@ -25,8 +25,6 @@ export class BybitTracker extends PositionTracker {
       const wallet = cred.label || cred.key.substring(0, 8);
       let accountTotal = 0;
 
-      console.log(`\n=== ${wallet} ===`);
-
       const unifiedResponse = await client.getWalletBalance({ accountType: 'UNIFIED' });
 
       if (unifiedResponse.retCode === 0) {
@@ -34,7 +32,6 @@ export class BybitTracker extends PositionTracker {
         for (const account of list) {
           const balance = parseFloat(account.totalWalletBalance || '0');
           if (balance !== 0) {
-            console.log(`UNIFIED: $${balance.toLocaleString()}`);
             accountTotal += balance;
           }
         }
@@ -50,14 +47,11 @@ export class BybitTracker extends PositionTracker {
           for (const account of list) {
             const balance = parseFloat(account.totalWalletBalance || '0');
             if (balance !== 0) {
-              console.log(`${accountType}: $${balance.toLocaleString()}`);
               accountTotal += balance;
             }
           }
         }
       }
-
-      console.log(`Total: $${accountTotal.toLocaleString()}\n`);
 
       walletPositions.push({
         wallet,

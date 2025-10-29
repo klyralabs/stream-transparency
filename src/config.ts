@@ -3,6 +3,8 @@ import { PositionTracker } from './trackers/base';
 import { LighterTracker } from './trackers/lighter/tracker';
 import { BybitTracker } from './trackers/bybit/tracker';
 import { BybitCredentials } from './trackers/bybit/types';
+import { BinanceTracker } from './trackers/binance/tracker';
+import { BinanceCredentials } from './trackers/binance/types';
 
 dotenv.config();
 
@@ -28,6 +30,23 @@ function parseBybitCredentials(): BybitCredentials[] {
   }));
 }
 
+function parseBinanceCredentials(): BinanceCredentials[] {
+  const keys = parseWalletList(process.env.BINANCE_API_KEYS);
+  const secrets = parseWalletList(process.env.BINANCE_API_SECRETS);
+  const labels = parseWalletList(process.env.BINANCE_LABELS);
+
+  if (keys.length !== secrets.length) {
+    console.warn('Warning: BINANCE_API_KEYS and BINANCE_API_SECRETS must have the same length');
+    return [];
+  }
+
+  return keys.map((key, i) => ({
+    key,
+    secret: secrets[i],
+    label: labels[i] || undefined
+  }));
+}
+
 export function getTrackers(): PositionTracker[] {
   const trackers: PositionTracker[] = [];
 
@@ -41,6 +60,11 @@ export function getTrackers(): PositionTracker[] {
   const bybitCredentials = parseBybitCredentials();
   if (bybitCredentials.length > 0) {
     trackers.push(new BybitTracker(bybitCredentials));
+  }
+
+  const binanceCredentials = parseBinanceCredentials();
+  if (binanceCredentials.length > 0) {
+    trackers.push(new BinanceTracker(binanceCredentials));
   }
 
   return trackers;
