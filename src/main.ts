@@ -13,10 +13,20 @@ async function main() {
     trackers.map(tracker => tracker.getPositions())
   );
 
-  const totalUsd = positions.reduce((sum, pos) => sum + pos.totalUsd, 0);
+  const totalCexUsd = positions
+    .filter(pos => pos.category === 'CEX')
+    .reduce((sum, pos) => sum + pos.totalUsd, 0);
+
+  const totalDexUsd = positions
+    .filter(pos => pos.category === 'DEX')
+    .reduce((sum, pos) => sum + pos.totalUsd, 0);
+
+  const totalUsd = totalCexUsd + totalDexUsd;
 
   const output: PortfolioOutput = {
     positions,
+    totalCexUsd,
+    totalDexUsd,
     totalUsd,
     timestamp: new Date().toISOString()
   };

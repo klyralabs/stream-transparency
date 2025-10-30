@@ -64,6 +64,7 @@ export class BybitTracker extends PositionTracker {
 
     return {
       positionType: 'Bybit',
+      category: 'CEX',
       wallets: walletPositions,
       poolAggregates: [],
       totalUsd,

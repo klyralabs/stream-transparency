@@ -37,6 +37,7 @@ export class BinanceTracker extends PositionTracker {
 
     return {
       positionType: 'Binance',
+      category: 'CEX',
       wallets: walletPositions,
       poolAggregates: [],
       totalUsd,

@@ -61,6 +61,7 @@ export class LighterTracker extends PositionTracker {
 
     return {
       positionType: 'Lighter',
+      category: 'DEX',
       wallets: walletPositions,
       poolAggregates,
       totalUsd,

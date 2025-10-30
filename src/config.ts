@@ -5,6 +5,8 @@ import { BybitTracker } from './trackers/bybit/tracker';
 import { BybitCredentials } from './trackers/bybit/types';
 import { BinanceTracker } from './trackers/binance/tracker';
 import { BinanceCredentials } from './trackers/binance/types';
+import { ParadexTracker } from './trackers/paradex/tracker';
+import { ParadexWallet } from './trackers/paradex/types';
 
 dotenv.config();
 
@@ -47,6 +49,23 @@ function parseBinanceCredentials(): BinanceCredentials[] {
   }));
 }
 
+function parseParadexWallets(): ParadexWallet[] {
+  const addresses = parseWalletList(process.env.PARADEX_WALLETS);
+  const keys = parseWalletList(process.env.PARADEX_KEYS);
+  const labels = parseWalletList(process.env.PARADEX_LABELS);
+
+  if (addresses.length !== keys.length) {
+    console.warn('Warning: PARADEX_WALLETS and PARADEX_KEYS must have the same length');
+    return [];
+  }
+
+  return addresses.map((address, i) => ({
+    address,
+    key: keys[i],
+    label: labels[i] || undefined
+  }));
+}
+
 export function getTrackers(): PositionTracker[] {
   const trackers: PositionTracker[] = [];
 
@@ -65,6 +84,11 @@ export function getTrackers(): PositionTracker[] {
   const binanceCredentials = parseBinanceCredentials();
   if (binanceCredentials.length > 0) {
     trackers.push(new BinanceTracker(binanceCredentials));
+  }
+
+  const paradexWallets = parseParadexWallets();
+  if (paradexWallets.length > 0) {
+    trackers.push(new ParadexTracker(paradexWallets));
   }
 
   return trackers;

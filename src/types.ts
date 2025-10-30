@@ -19,6 +19,7 @@ export interface PoolAggregate {
 
 export interface PositionSummary {
   positionType: string;
+  category: 'CEX' | 'DEX';
   wallets: WalletPosition[];
   poolAggregates: PoolAggregate[];
   totalUsd: number;
@@ -27,6 +28,8 @@ export interface PositionSummary {
 
 export interface PortfolioOutput {
   positions: PositionSummary[];
+  totalCexUsd: number;
+  totalDexUsd: number;
   totalUsd: number;
   timestamp: string;
 }
