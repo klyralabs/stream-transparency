@@ -26,6 +26,7 @@ export class BybitTracker extends PositionTracker {
       let accountTotal = 0;
 
       const unifiedResponse = await client.getWalletBalance({ accountType: 'UNIFIED' });
+      console.log(unifiedResponse);
 
       if (unifiedResponse.retCode === 0) {
         const list = unifiedResponse.result?.list || [];
@@ -35,7 +36,9 @@ export class BybitTracker extends PositionTracker {
             accountTotal += balance;
           }
         }
-      } else {
+      }
+
+      if (unifiedResponse.retCode !== 0 || accountTotal === 0) {
         for (const accountType of ['SPOT', 'CONTRACT', 'OPTION', 'FUND'] as const) {
           const response = await client.getWalletBalance({ accountType });
 
